@@ -2,9 +2,25 @@ package edu.handong.csee.java.chatcounter;
 
 import java.util.ArrayList;
 
+/**
+ * This class parses csv file. </br>
+ * it makes the format name time date. </br>
+ * 
+ * @author HAN
+ */
 public class MacParser {
+	/**
+	 * it makes a new arraylist to store the new value name time date. </br>
+	 * 
+	 * @author HAN
+	 */
 	public ArrayList<String> parsedCSVMessage = new ArrayList<String>();
 
+	/**
+	 * to do work making new list name time date. </br>
+	 * 
+	 * @author HAN
+	 */
 	public void parseCSV(ArrayList<String> messageCSV2) {
 
 		int date2;

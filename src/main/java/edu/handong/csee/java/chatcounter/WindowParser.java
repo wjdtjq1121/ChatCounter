@@ -4,11 +4,25 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * This class parses txt file make the format name time data. </br>
+ * 
+ * @author HAN
+ */
 public class WindowParser{
 
-
+	/**
+	 * makes a new arraylist to store the new value. </br>
+	 * 
+	 * @author HAN
+	 */
 	public ArrayList<String> parsedTXTMessage = new ArrayList<String>();
 
+	/**
+	 * this method parses txt files and store the value name time value </br>
+	 * 
+	 * @author HAN
+	 */
 	public void parseWin(ArrayList<String> messageTXT) {
 
 		int token1_start;

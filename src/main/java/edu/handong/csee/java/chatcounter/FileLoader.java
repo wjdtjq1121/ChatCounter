@@ -13,7 +13,7 @@ import java.io.FileNotFoundException;
  * @author HAN
  */
 public class FileLoader{
-	
+
 	/**
 	 * This gets a file directory initial value is null. </br>
 	 * @author HAN
@@ -23,13 +23,27 @@ public class FileLoader{
 	Scanner inputStream = null;
 	ArrayList<String> messageCSV = new ArrayList<String>();
 	ArrayList<String> messageTXT = new ArrayList<String>();
+	/**
+	 * hashmap to store name value and number of value how many user speaks. </br>
+	 * 
+	 * @author HAN
+	 */
 	public HashMap<String, Integer> counted = new HashMap<String, Integer>();
 
+	/**
+	 * This method brings path and store path value in directory </br>
+	 * 
+	 * @author HAN
+	 */
 	public FileLoader(String path){
 		directory = new File(path);
 	}
 
-
+	/**
+	 * This method get path value and bring csv file. </br>
+	 * 
+	 * @author HAN
+	 */
 	public void getMac(String path) {
 		for(File file:directory.listFiles())
 		{
@@ -58,6 +72,11 @@ public class FileLoader{
 		}
 	}
 
+	/**
+	 * This method get path value and bring txt file. </br>
+	 * 
+	 * @author HAN
+	 */
 	public void getWindow(String path) {
 
 		for(File file:directory.listFiles())
@@ -87,6 +106,11 @@ public class FileLoader{
 		}			
 	}
 
+	/**
+	 * This method returns how many times user speaks. </br>
+	 * 
+	 * @author HAN
+	 */
 	public HashMap<String, Integer> countData(ArrayList<String> list){
 		for(String readLine : list) {
 			int mess1 = readLine.indexOf('['); 
@@ -105,25 +129,40 @@ public class FileLoader{
 		return counted;
 	}
 
+	/**
+	 * getters returning csv method. </br>
+	 * 
+	 * @author HAN
+	 */
 	public ArrayList<String> getMessageCSV() {
 		return messageCSV;
 	}
 
-
+	/**
+	 * setters setting csv method. </br>
+	 * 
+	 * @author HAN
+	 */
 	public void setMessageCSV(ArrayList<String> messageCSV) {
 		this.messageCSV = messageCSV;
 	}
 
-
+	/**
+	 * getters returning txt method. </br>
+	 * 
+	 * @author HAN
+	 */
 	public ArrayList<String> getMessageTXT() {
 		return messageTXT;
 	}
 
-
+	/**
+	 * setters setting txt method. </br>
+	 * 
+	 * @author HAN
+	 */
 	public void setMessageTXT(ArrayList<String> messageTXT) {
 		this.messageTXT = messageTXT;
 	}
-
-
 
 }
