@@ -8,39 +8,56 @@ public class WindowParser{
 
 
 	public ArrayList<String> parsedTXTMessage = new ArrayList<String>();
-	
+
 	public void parseWin(ArrayList<String> messageTXT) {
 
-		String date = null;
-				
-		int year1 = 0;
-		int month1 = 0;
-		int day1 = 0;
-		String year;
-		String month;
-		String day;
-		
-		
+		int token1_start;
+		int token1_end;
+		int time_start;
+		int time_end;
+		int num_start;
+		int num_end;
+		String token1;
+		String data;
+		String time;
+
+		String num = null;
+
 		for(String readLine : messageTXT) {
-			String pattern = "-+\\s([0-9]+).\\s([0-9]+).\\s([0-9]+).\\s-+";
-			Pattern r = Pattern.compile(pattern);
-			Matcher m = r.matcher(readLine);
-			
-			if (m.find()) {
-				year1 = Integer.parseInt(m.group(1));
-				month1 = Integer.parseInt(m.group(2));
-				day1 = Integer.parseInt(m.group(3));
-			}
-			year = String.valueOf(year1);
-			month =  String.valueOf(month1);
-			day = String.valueOf(day1);
-			
-			date = year + "-" + month + "-" + day;
+
 			if(readLine.startsWith("["))	{
+
 				readLine = readLine.replace("\"", "\"\"");
-				 // System.out.println(readLine);
-				parsedTXTMessage.add(readLine);
-			}			
+
+				token1_start = readLine.indexOf("[");
+				token1_end = readLine.indexOf("]", token1_start+1);
+				time_start = readLine.indexOf("]");
+				time_end = readLine.indexOf("]", time_start+1);
+
+				time = readLine.substring(time_start+3, time_end);
+
+				if(time.contains("AM") || time.contains("PM")) {
+					num_start = readLine.indexOf("]");
+
+					num = readLine.substring(num_start+3, time_end-3);
+
+				}
+
+				data = readLine.substring(time_end+2, readLine.length());
+
+				token1 = readLine.substring(token1_start+1, token1_end);
+
+				if(time.contains("AM"))
+					time = "오전 " + num.substring(0, num.length());
+				if(time.contains("PM"))
+					time = "오후 " + num.substring(0, num.length());	
+				// System.out.println("[" + token1 + "]" + " " + "[" + time + "]" + " " + data);
+				parsedTXTMessage.add("[" + token1 + "]" + " " + "[" + time + "]" + " " + data.trim());
+
+				// System.out.println(readLine);
+				// parsedTXTMessage.add(readLine);
+
+			}
 		}
 	}
 }
