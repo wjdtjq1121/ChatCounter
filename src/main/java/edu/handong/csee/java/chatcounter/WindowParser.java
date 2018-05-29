@@ -62,15 +62,14 @@ public class WindowParser{
 				token1 = readLine.substring(token1_start+1, token1_end);
 
 				if(time.contains("AM"))
-					time = "¿ÀÀü " + num.substring(0, num.length());
+					time = "ì˜¤ì „ " + num.substring(0, num.length());
 				if(time.contains("PM"))
-					time = "¿ÀÈÄ " + num.substring(0, num.length());	
+					time = "ì˜¤í›„ " + num.substring(0, num.length());	
 				// System.out.println("[" + token1 + "]" + " " + "[" + time + "]" + " " + data);
 				parsedTXTMessage.add("[" + token1 + "]" + " " + "[" + time + "]" + " " + data.trim());
 
 				// System.out.println(readLine);
 				// parsedTXTMessage.add(readLine);
-
 			}
 		}
 	}

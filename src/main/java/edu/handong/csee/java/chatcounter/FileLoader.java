@@ -63,8 +63,6 @@ public class FileLoader{
 					// System.out.println(line);
 
 					messageCSV.add(line);
-
-
 				}
 				inputStream.close();
 
@@ -98,7 +96,6 @@ public class FileLoader{
 					// System.out.println(line);
 
 					messageTXT.add(line);
-
 				}
 				inputStream.close();
 

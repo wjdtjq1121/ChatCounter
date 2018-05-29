@@ -1,7 +1,7 @@
 package edu.handong.csee.java.chatcounter;
 
-import java.util.HashMap;
 import java.util.*;
+import java.io.*;
 
 /**
  * This class writes name and value. </br>
@@ -10,6 +10,16 @@ import java.util.*;
  * @author HAN
  */
 public class FileWriter implements Mine{
+
+	/**
+	 * constructors, executing super constructor and then stores the outputfile value here. </br> 
+	 * @author HAN
+	 */
+	public FileWriter(String outputFile) {
+		super();
+		this.outputFile = outputFile;
+	}
+	String outputFile = "outputa.csv";
 
 	/**
 	 * This method does descending order print all the values. </br>
@@ -37,13 +47,24 @@ public class FileWriter implements Mine{
 		});
 		Collections.reverse(descend);
 
+
+		// File file = new File("C:\\Users\\HAN\\Desktop\\java\\java lab\\ChatCounter\\output.csv");
+		// File file = new File("outputFile");
+		PrintWriter printWriter = null;
+		try {
+			printWriter = new PrintWriter("output.csv");
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		printWriter.println("kakao_id,count");
+
 		for(int i=0; i<descend.size(); i++)
 		{
-			System.out.print(descend.get(i));	
-			System.out.println(" " + list.get(descend.get(i)));
+			printWriter.print(descend.get(i));	
+			printWriter.println("," + list.get(descend.get(i)));
 		}
-
-
+		printWriter.close();
 
 	}
 }

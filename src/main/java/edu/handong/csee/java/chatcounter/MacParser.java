@@ -38,7 +38,7 @@ public class MacParser {
 
 		for(String readLine : messageCSV2) {
 			//System.out.println(readLine);
-			//if(readLine.contains("\"³²ÀçÃ¢\"")) System.out.println(readLine);
+			//if(readLine.contains("\"ï¿½ï¿½ï¿½ï¿½Ã¢\"")) System.out.println(readLine);
 			if(readLine.startsWith("201")) {
 				name1 = readLine.indexOf("\"");
 				name2 = readLine.indexOf("\"", name1+1);
@@ -50,17 +50,17 @@ public class MacParser {
 
 				// System.out.println("[" + time + "]");
 
-				if(hour == 0) time = "¿ÀÀü " + "12" + time.substring(2, time.length());
+				if(hour == 0) time = "ì˜¤ì „ " + "12" + time.substring(2, time.length());
 				else if(0 < hour && hour < 10) time = 
-						"¿ÀÀü " +time.substring(1, time.length());
-				else if(hour == 11 || hour == 10) time = "¿ÀÀü " + time;
-				else if(hour == 12) time = "¿ÀÈÄ " + time.substring(0, time.length());
-				else if(hour > 12) time = "¿ÀÈÄ " + (hour-12) + time.substring(2, time.length());
+						"ì˜¤ì „ " +time.substring(1, time.length());
+				else if(hour == 11 || hour == 10) time = "ì˜¤ì „ " + time;
+				else if(hour == 12) time = "ì˜¤í›„ " + time.substring(0, time.length());
+				else if(hour > 12) time = "ì˜¤í›„ " + (hour-12) + time.substring(2, time.length());
 
 				name = readLine.substring(name1+1, name2);
 				if(readLine.endsWith("\"")) data = readLine.substring(data1+1, readLine.length()-1); 
 				else data = readLine.substring(data1+1, readLine.length());
-				if(data.equals("Photo"))data = "»çÁø";
+				if(data.equals("Photo"))data = "ì‚¬ì§„";
 
 				// System.out.println("[" + name + "] "+"[" + time + "] " + data);
 				parsedCSVMessage.add("[" + name + "] "+"[" + time + "] " + data.trim());		

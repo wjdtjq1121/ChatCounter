@@ -1,7 +1,7 @@
 package edu.handong.csee.java.chatcounter;
 
-//import java.io.File;
-//import java.io.FileNotFoundException;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.HashMap;
@@ -19,9 +19,9 @@ import org.apache.commons.cli.Options;
  */
 public class Main {
 
-	
+
 	String path;
-	String output;
+	String outputPath;
 	boolean help;
 	/**
 	 * initialize the value null public file. </br>
@@ -45,23 +45,29 @@ public class Main {
 	/**
 	 * this run method actually runs the program. </br>
 	 * it brings the file parses the file, remove the redundancy, and write the file. </br>
-	 * 
+	 * add commons cli options i o help, i reads path of a directory o is a path of a file. </br>
 	 * @author HAN
 	 */
 	public void run(String[] args) {
-	
+
+		// revive this later!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		Options options = createOptions();
 		if(parseOptions(options, args)){			
 			if (help){
 				printHelp(options);
 				return;
 			}
-			
+
+			// disable this bottom string path when you submit the project ----------------------------------------------
+			//	String path = "C:\\Users\\HAN\\Desktop\\java\\java lab\\chatcounter materials\\drive-download-20180526T060231Z-001";
+
+			//   outputPath = "C:\\Users\\HAN\\Desktop\\java\\java lab\\ChatCounter\\output.csv"; 	
+
 			FileLoader fileloader = new FileLoader(path);
 			MacParser readMac = new MacParser();
 			WindowParser readWin = new WindowParser();
 			RedundancyChecker check = new RedundancyChecker();
-			Mine write = new FileWriter();
+			Mine write = new FileWriter(outputPath);
 
 			ArrayList<String> data = new ArrayList<String>();
 			HashMap<String, Integer> list = new HashMap<String, Integer>();
@@ -92,28 +98,26 @@ public class Main {
 			//			  }
 
 
-			//		  for(String showLine: temp){
-			//			  if(showLine.contains("남재창"))
-			//		  System.out.println(showLine);
-			//		  }
+			//					  for(String showLine: temp){
+			//						  if(showLine.contains("[ㅇ]"))
+			//					  System.out.println(showLine);
+			//					  }
 
 			list = fileloader.countData(temp);
 			write.show(list);
-			
+
 			// path is required (necessary) data so no need to have a branch.
 			System.out.println("You provided \"" + path + "\" as the value of the option p");
-			
-			// TODO show the number of files in the path
-			
-			
-		}
-		
-		
-		// String path = "C:\\Users\\HAN\\Desktop\\java\\java lab\\chatcounter materials\\drive-download-20180526T060231Z-001";
-		
 
+			// revive this later!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11	
+		}
 	}
 
+	/**
+	 * method private return type is boolean, has two argument parameters. </br>
+	 * brought this from mvnrepository commons cli, making 3 options i o h, bring a path directory and file. </br> 
+	 * @author HAN
+	 */
 	private boolean parseOptions(Options options, String[] args) {
 		CommandLineParser parser = new DefaultParser();
 
@@ -122,7 +126,7 @@ public class Main {
 			CommandLine cmd = parser.parse(options, args);
 
 			path = cmd.getOptionValue("i");
-			output = cmd.getOptionValue("o");
+			outputPath = cmd.getOptionValue("o");
 			help = cmd.hasOption("h");
 
 		} catch (Exception e) {
@@ -134,6 +138,11 @@ public class Main {
 	}
 
 	// Definition Stage
+	/**
+	 * method private return type is boolean, has two argument parameters. </br>
+	 * brought this from mvnrepository commons cli, making 3 options i o h, bring a path directory and file. </br> 
+	 * @author HAN
+	 */
 	private Options createOptions() {
 		Options options = new Options();
 
@@ -146,21 +155,25 @@ public class Main {
 				.build());
 
 		// add options by using OptionBuilder
-		options.addOption(Option.builder("o").longOpt("output")
+		options.addOption(Option.builder("o").longOpt("outputPath")
 				.desc("Set a file path which having a csv file that has count information for each user from the all message files")
 				.hasArg()
 				.argName("A file path")
 				.required()
 				.build());
-		
+
 		// add options by using OptionBuilder
 		options.addOption(Option.builder("h").longOpt("help")
-		        .desc("Help")
-		        .build());
+				.desc("Help")
+				.build());
 
 		return options;
 	}
-	
+
+	/**
+	 * help options if there is no file path which coming from the user, it prints the message help. </br>
+	 * @author HAN
+	 */
 	private void printHelp(Options options) {
 		// automatically generate the help statement
 		HelpFormatter formatter = new HelpFormatter();
@@ -168,7 +181,5 @@ public class Main {
 		String footer ="\nPlease report issues at https://github.com/lifove/CLIExample/issues";
 		formatter.printHelp("CLIExample", header, options, footer, true);
 	}
-	
-	
-	
+
 }
