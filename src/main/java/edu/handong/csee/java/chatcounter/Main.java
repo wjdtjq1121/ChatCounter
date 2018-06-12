@@ -30,8 +30,18 @@ public class Main {
 	int threadNum;
 	String getThreadNum;
 
+	/**
+	 * declares file instance directory value as null. </br>
+	 * 
+	 * @author HAN
+	 */
 	private File directory = null;
 
+	/**
+	 * hashmap key value is string (name) and value is the number of counts which each people speaks. </br>
+	 * 
+	 * @author HAN
+	 */
 	public HashMap<String, Integer> counted = new HashMap<String, Integer>();
 
 	/**
@@ -82,7 +92,7 @@ public class Main {
 			this.directory = new File(path);
 
 			threadNum = Integer.parseInt(getThreadNum);
-			
+
 			int numOfCoresInMyCPU = Runtime.getRuntime().availableProcessors();
 
 			System.out.println("The number of cores of my system: " + numOfCoresInMyCPU);
@@ -217,7 +227,7 @@ public class Main {
 			outputPath = cmd.getOptionValue("o");
 			help = cmd.hasOption("h");
 			getThreadNum = cmd.getOptionValue("c");
-			
+
 		} catch (Exception e) {
 			printHelp(options);
 			return false;
