@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.HashMap;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -11,6 +13,8 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
+import java.util.*;
+
 
 /**
  * This main class runs a file to do all basic work here. </br>
@@ -23,6 +27,13 @@ public class Main {
 	String path;
 	String outputPath;
 	boolean help;
+	int threadNum;
+	String getThreadNum;
+
+	private File directory = null;
+
+	public HashMap<String, Integer> counted = new HashMap<String, Integer>();
+
 	/**
 	 * initialize the value null public file. </br>
 	 * 
@@ -30,7 +41,6 @@ public class Main {
 	 */
 	// public File directoryFile = null;	
 	Scanner inputStream = null;
-	ArrayList<String> messageCSV = new ArrayList<String>();
 
 	/**
 	 * static void method calls runner method to do all the work. </br>
@@ -63,7 +73,77 @@ public class Main {
 
 			//   outputPath = "C:\\Users\\HAN\\Desktop\\java\\java lab\\ChatCounter\\output.csv"; 	
 
-			FileLoader fileloader = new FileLoader(path);
+			ArrayList<CSVFileReader> csvReader = new ArrayList<CSVFileReader>(); 
+			// ArrayList<String> messageCSV = new ArrayList<String>();
+
+			ArrayList<TXTFileReader> txtReader = new ArrayList<TXTFileReader>();
+
+
+			this.directory = new File(path);
+
+			threadNum = Integer.parseInt(getThreadNum);
+			
+			int numOfCoresInMyCPU = Runtime.getRuntime().availableProcessors();
+
+			System.out.println("The number of cores of my system: " + numOfCoresInMyCPU);
+			System.out.println("Please enter the number 4 which is the number of cores of my system: " + threadNum);
+
+
+			ExecutorService executor = Executors.newFixedThreadPool(threadNum);
+
+			for(File file:directory.listFiles())
+			{
+				if (file.getName().contains(".csv")) {
+
+					Runnable worker = new CSVFileReader(file);
+					executor.execute(worker);
+					csvReader.add((CSVFileReader)worker);
+				}
+			}
+
+			executor.shutdown();
+			while(!executor.isTerminated()) {
+
+			}			  	
+
+			ArrayList<String> messageCSVAll = new ArrayList<String>();
+			for(CSVFileReader runner : csvReader) {
+				messageCSVAll.addAll(runner.messageCSV);
+			}
+
+
+			// from here, start reading txt file
+
+			ExecutorService executor2 = Executors.newFixedThreadPool(threadNum);
+
+			for(File file:directory.listFiles())
+			{
+				if (file.getName().contains(".txt")) {
+
+					Runnable worker = new TXTFileReader(file);
+					executor2.execute(worker);
+					txtReader.add((TXTFileReader)worker);
+				}
+			}
+
+			executor2.shutdown();
+			while(!executor2.isTerminated()) {
+
+			}			  	
+
+			ArrayList<String> messageTXTAll = new ArrayList<String>();
+			for(TXTFileReader runner : txtReader) {
+				messageTXTAll.addAll(runner.messageTXT);
+			}
+
+
+
+			//			for(String showLine: messageTXTAll){
+			//				 
+			//			  System.out.println(showLine);
+			//			  }
+
+
 			MacParser readMac = new MacParser();
 			WindowParser readWin = new WindowParser();
 			RedundancyChecker check = new RedundancyChecker();
@@ -75,13 +155,21 @@ public class Main {
 			ArrayList<String> temp = new ArrayList<String>();
 
 
-			fileloader.getMac(path);
-			fileloader.getWindow(path);
-			readMac.parseCSV(fileloader.messageCSV);
-			readWin.parseWin(fileloader.messageTXT);
+			readMac.parseCSV(messageCSVAll);
+			readWin.parseWin(messageTXTAll);  
 
 			data.addAll(readMac.parsedCSVMessage);
 			data.addAll(readWin.parsedTXTMessage);
+
+
+			// lower 4 lines print out thread csv lines
+
+			//			  for(String showLine: testCsv.messageCSV){
+			//							 
+			//						  System.out.println(showLine);
+			//						  }
+
+
 
 
 			for(String showLine: data){
@@ -103,11 +191,11 @@ public class Main {
 			//					  System.out.println(showLine);
 			//					  }
 
-			list = fileloader.countData(temp);
+			list = countData(temp);
 			write.show(list);
 
 			// path is required (necessary) data so no need to have a branch.
-			System.out.println("You provided \"" + path + "\" as the value of the option p");
+			System.out.println("You provided \"" + path + "\" as the value of the option i");
 
 			// revive this later!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11	
 		}
@@ -128,13 +216,38 @@ public class Main {
 			path = cmd.getOptionValue("i");
 			outputPath = cmd.getOptionValue("o");
 			help = cmd.hasOption("h");
-
+			getThreadNum = cmd.getOptionValue("c");
+			
 		} catch (Exception e) {
 			printHelp(options);
 			return false;
 		}
 
 		return true;
+	}
+
+
+	/**
+	 * This method returns how many times user speaks. </br>
+	 * 
+	 * @author HAN
+	 */
+	public HashMap<String, Integer> countData(ArrayList<String> list){
+		for(String readLine : list) {
+			int mess1 = readLine.indexOf('['); 
+			int mess2 = readLine.indexOf(']');
+			int count;
+			if(mess1>=0) {
+				String name = readLine.substring(mess1+1, mess2);
+				if(counted.get(name)!=null) {
+					count = counted.get(name);
+					count ++;
+					counted.put(name, count);
+				}
+				else counted.put(name, 1);
+			}
+		}
+		return counted;
 	}
 
 	// Definition Stage
@@ -159,6 +272,14 @@ public class Main {
 				.desc("Set a file path which having a csv file that has count information for each user from the all message files")
 				.hasArg()
 				.argName("A file path")
+				.required()
+				.build());
+
+		// add options by using OptionBuilder
+		options.addOption(Option.builder("c").longOpt("number of threads")
+				.desc("Getting the number of threads which is four in my computer system")
+				.hasArg()
+				.argName("the number of thread which is 4")
 				.required()
 				.build());
 

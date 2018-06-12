@@ -52,6 +52,7 @@ public class FileWriter implements Mine{
 		// File file = new File("outputFile");
 		PrintWriter printWriter = null;
 		try {
+			
 			printWriter = new PrintWriter("output.csv");
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
